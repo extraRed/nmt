@@ -398,6 +398,7 @@ class BaseModel(object):
 
       ## Inference
       else:
+        decoder_type = hparams.decoder_type
         beam_width = hparams.beam_width
         length_penalty_weight = hparams.length_penalty_weight
         start_tokens = tf.fill([self.batch_size], tgt_sos_id)
