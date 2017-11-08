@@ -414,9 +414,20 @@ class BaseModel(object):
               output_layer=self.output_layer,
               length_penalty_weight=length_penalty_weight)
         else:
-          # Helper
-          helper = tf.contrib.seq2seq.GreedyEmbeddingHelper(
-              self.embedding_decoder, start_tokens, end_token)
+          if decoder_type == "greedy":
+            # Helper
+            helper = tf.contrib.seq2seq.GreedyEmbeddingHelper(
+                  self.embedding_decoder, start_tokens, end_token)
+          else:
+            utils.print_out("  using sampling now...")
+            temperature = hparams.temperature
+            if temperature < 0:
+              temperature = 1.0
+            
+            # Helper
+            # Temperature value controls the variety
+            helper = tf.contrib.seq2seq.SampleEmbeddingHelper(
+                self.embedding_decoder, start_tokens, end_token, temperature)    
 
           # Decoder
           my_decoder = tf.contrib.seq2seq.BasicDecoder(
